@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
       let yanit = await fetch(`https://restcountries.com/v3.1/name/${name}`);
       let veri = await yanit.json();
       putCountries(veri);
+      console.log("Filter");
 
     } catch (hata) {
       console.error("Hata oluştu:", hata);
