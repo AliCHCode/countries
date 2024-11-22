@@ -3,15 +3,33 @@ document.addEventListener("DOMContentLoaded", function () {
   mainContainer.className = "main-container";
   document.body.appendChild(mainContainer);
 
-  async function veriGetir() {
+  async function firstRequest() {
     try {
       let yanit = await fetch("https://restcountries.com/v3.1/all");
-
       let veri = await yanit.json();
-      console.log("Veri:", veri);
+      putCountries(veri);
 
-      veri
-        .filter((e) => e.name.common.startsWith("a"))
+    } catch (hata) {
+      console.error("Hata oluştu:", hata);
+    }
+  }
+
+  async function searchRequest(name) {
+    try {
+      let yanit = await fetch(`https://restcountries.com/v3.1/name/${name}`);
+      let veri = await yanit.json();
+      putCountries(veri);
+
+    } catch (hata) {
+      console.error("Hata oluştu:", hata);
+    }
+  }
+
+  const putCountries = (countries) => {
+    let containerElement =document.getElementsByClassName("main-container")[0];
+    containerElement.innerHTML = '';
+
+    countries
         .forEach((e) => {
           const countryElement = `
           <div class="native link">
@@ -20,16 +38,15 @@ document.addEventListener("DOMContentLoaded", function () {
               ${e.name.common}
             </a>
           </div>`;
-
-          document.getElementsByClassName("main-container")[0].innerHTML +=
-            countryElement;
+          
+          containerElement.innerHTML += countryElement;
         });
-
-      console.log("Veriler başarıyla alındı:", veri);
-    } catch (hata) {
-      console.error("Hata oluştu:", hata);
-    }
   }
+
+  document.querySelector('.filter').addEventListener('input', function(event) {
+    // Fonksiyon çağrısı veya işlemler burada yapılır
+    searchRequest(event.target.value); // Örneğin, girilen değeri bir fonksiyona gönderme
+});
 
   var styleElement = document.createElement("style");
 
@@ -73,5 +90,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.head.appendChild(styleElement);
 
-  veriGetir();
+  firstRequest();
+  searchRequest("tur");
 });
